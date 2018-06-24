@@ -6,40 +6,30 @@
 
     <groupId>com.test.lzw.ark</groupId>
     <artifactId>ark-plugin</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>ark-plugin-common</module>
-        <module>ark-plugin-activate</module>
-    </modules>
 
     <properties>
         <sofa.ark.version>0.3.0</sofa.ark.version>
+        <test.thirdparty.verison>1.0-SNAPSHOT</test.thirdparty.verison>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
-                <groupId>com.test.lzw.ark</groupId>
-                <artifactId>ark-plugin-common</artifactId>
-                <version>${project.version}</version>
+                <groupId>com.zim.test.thirdparty</groupId>
+                <artifactId>test-thirdparty</artifactId>
+                <version>${test.thirdparty.verison}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.test.lzw.ark</groupId>
-                <artifactId>ark-plugin-activate</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alipay.sofa</groupId>
-                <artifactId>sofa-ark-spi</artifactId>
-                <version>${sofa.ark.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.zim.test.thirdparty</groupId>
+            <artifactId>test-thirdparty</artifactId>
+        </dependency>
+    </dependencies>
 
     <!--deploy jar -->
     <distributionManagement>
@@ -59,6 +49,36 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-plugin-maven-plugin</artifactId>
+                <version>${sofa.ark.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>ark-plugin</goal>
+                        </goals>
+
+                        <configuration>
+
+                            <!-- configure exported class -->
+                            <exported>
+                                <!-- exported 的 package 或 class 在 Biz 中使用时是通过 PluginClassLoader 加载的 -->
+                                <packages>
+                                    <package>com.test.lzw.ark.plugin.exported</package>
+                                </packages>
+                            </exported>
+
+                            <!--specify destination where ark-plugin will be saved, default saved to ${project.build.directory}-->
+                            <outputDirectory>../target</outputDirectory>
+
+                        </configuration>
+                    </execution>
+
+                </executions>
             </plugin>
         </plugins>
     </build>
